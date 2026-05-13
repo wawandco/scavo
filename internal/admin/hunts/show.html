@@ -1,0 +1,74 @@
+<div class="max-w-4xl mx-auto w-full">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900"><%= hunt.Title %></h1>
+    <div class="flex gap-3">
+      <a href="/admin/hunts/<%= hunt.ID %>/edit" class="inline-flex items-center px-3 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-50">
+        Edit
+      </a>
+      <form action="/admin/hunts/<%= hunt.ID %>/delete" method="POST" class="inline" onsubmit="return confirm('Delete this hunt?');">
+        <button type="submit" class="inline-flex items-center px-3 py-2 bg-white border border-red-300 text-red-700 text-sm font-medium rounded-md hover:bg-red-50">
+          Delete
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="prose max-w-none">
+      <p class="text-gray-700 whitespace-pre-wrap"><%= hunt.Description %></p>
+    </div>
+
+    <div class="mt-6 pt-6 border-t border-gray-200 text-sm text-gray-500">
+      <p>Points: <span class="font-mono font-medium text-gray-700"><%= hunt.Points %></span></p>
+      <p>Created: <%= hunt.CreatedAt.Format("Jan 02, 2006 15:04") %></p>
+      <p>Updated: <%= hunt.UpdatedAt.Format("Jan 02, 2006 15:04") %></p>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <h2 class="text-xl font-bold text-gray-900 mb-4">Submissions</h2>
+    <%= if (len(submissions) == 0) { %>
+      <p class="text-gray-500">No submissions yet.</p>
+    <% } else { %>
+      <div class="space-y-4">
+        <%= for (submission) in submissions { %>
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-medium text-gray-900"><%= submission.MemberName %></span>
+                <span class="text-xs text-gray-500">(<%= submission.TeamName %>)</span>
+                <%= if (submission.Status == "pending") { %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
+                <% } else if (submission.Status == "approved") { %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Approved</span>
+                <% } else { %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Rejected</span>
+                <% } %>
+              </div>
+              <span class="text-xs text-gray-500"><%= submission.CreatedAt.Format("Jan 02, 2006 15:04") %></span>
+            </div>
+            <p class="text-sm text-gray-700 mb-3"><%= submission.Text %></p>
+            <img src="/uploads/<%= submission.ImagePath %>" alt="Submission image" class="max-h-64 rounded-md border border-gray-200 mb-3">
+            <div class="flex gap-2">
+              <%= if (submission.Status == "pending") { %>
+                <form action="/admin/hunts/<%= hunt.ID %>/submissions/<%= submission.ID %>/approve" method="POST" class="inline">
+                  <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-500">Approve</button>
+                </form>
+                <form action="/admin/hunts/<%= hunt.ID %>/submissions/<%= submission.ID %>/reject" method="POST" class="inline">
+                  <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-500">Reject</button>
+                </form>
+              <% } %>
+              <form action="/admin/hunts/<%= hunt.ID %>/submissions/<%= submission.ID %>/delete" method="POST" class="inline" onsubmit="return confirm('Delete this submission?');">
+                <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200">Delete</button>
+              </form>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="mt-6">
+    <a href="/admin/hunts" class="text-sm text-indigo-600 hover:text-indigo-500">← Back to Hunts</a>
+  </div>
+</div>

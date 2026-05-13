@@ -1,0 +1,36 @@
+<div class="max-w-4xl mx-auto w-full">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900"><%= team.Name %></h1>
+    <div class="flex gap-3">
+      <a href="/admin/teams/<%= team.ID %>/edit" class="inline-flex items-center px-3 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-50">
+        Edit
+      </a>
+      <form action="/admin/teams/<%= team.ID %>/delete" method="POST" class="inline" onsubmit="return confirm('Delete this team? Members will be unassigned.');">
+        <button type="submit" class="inline-flex items-center px-3 py-2 bg-white border border-red-300 text-red-700 text-sm font-medium rounded-md hover:bg-red-50">
+          Delete
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Members</h2>
+    <%= if (len(members) == 0) { %>
+      <p class="text-gray-500">No members assigned to this team yet.</p>
+      <a href="/admin/members/new" class="mt-2 inline-block text-amber-600 font-medium hover:text-amber-500">Add a member →</a>
+    <% } else { %>
+      <ul class="divide-y divide-gray-200">
+        <%= for (member) in members { %>
+          <li class="py-3">
+            <p class="text-sm font-medium text-gray-900"><%= member.Name %></p>
+            <p class="text-sm text-gray-500 font-mono"><%= member.PersonalID %></p>
+          </li>
+        <% } %>
+      </ul>
+    <% } %>
+  </div>
+
+  <div class="mt-6">
+    <a href="/admin/teams" class="text-sm text-amber-600 hover:text-amber-500">← Back to Teams</a>
+  </div>
+</div>

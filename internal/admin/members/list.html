@@ -1,0 +1,64 @@
+<div class="max-w-4xl mx-auto w-full">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Members</h1>
+    <a href="/admin/members/new" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-500">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+      </svg>
+      New Member
+    </a>
+  </div>
+
+  <%= if (len(members) == 0) { %>
+    <div class="bg-white rounded-lg shadow p-12 text-center">
+      <p class="text-gray-500 text-lg">No members yet.</p>
+      <a href="/admin/members/new" class="mt-4 inline-block text-emerald-600 font-medium hover:text-emerald-500">Add your first member →</a>
+    </div>
+  <% } else { %>
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <table class="w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Personal ID</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admin</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <%= for (member) in members { %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <a href="/admin/members/<%= member.ID %>" class="text-emerald-600 hover:text-emerald-900"><%= member.Name %></a>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono"><%= member.PersonalID %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= if (member.TeamName != "") { %>
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800"><%= member.TeamName %></span>
+                <% } else { %>
+                  <span class="text-gray-400">—</span>
+                <% } %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= if (member.IsAdmin) { %>
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Admin</span>
+                <% } else { %>
+                  <span class="text-gray-400">—</span>
+                <% } %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= member.CreatedAt.Format("Jan 02, 2006") %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <a href="/admin/members/<%= member.ID %>/edit" class="text-emerald-600 hover:text-emerald-900 mr-4">Edit</a>
+                <form action="/admin/members/<%= member.ID %>/delete" method="POST" class="inline" onsubmit="return confirm('Delete this member?');">
+                  <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>

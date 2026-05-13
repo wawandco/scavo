@@ -1,0 +1,23 @@
+<div class="max-w-4xl mx-auto w-full">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">New Member</h1>
+
+  <form action="/admin/members" method="POST" class="bg-white rounded-lg shadow p-6 space-y-6">
+    <div>
+      <label for="name" class="block text-sm font-medium text-gray-900">Name</label>
+      <input type="text" name="name" id="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm px-3 py-2 border">
+    </div>
+
+    <div>
+      <label for="personal_id" class="block text-sm font-medium text-gray-900">Personal ID</label>
+      <input type="text" name="personal_id" id="personal_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm px-3 py-2 border">
+      <p class="mt-1 text-sm text-gray-500">Unique ID used by the member to log in.</p>
+    </div>
+
+    <div class="flex items-center justify-between pt-4">
+      <a href="/admin/members" class="text-sm text-gray-600 hover:text-gray-900">Cancel</a>
+      <button type="submit" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-500">
+        Create Member
+      </button>
+    </div>
+  </form>
+</div>

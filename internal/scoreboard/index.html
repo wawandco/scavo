@@ -1,0 +1,35 @@
+<div class="max-w-4xl mx-auto w-full">
+  <div class="w-full">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">Scoreboard</h1>
+      <span class="text-sm text-gray-500"><%= possiblePoints %> points possible</span>
+    </div>
+
+    <%= if (len(scores) == 0) { %>
+      <div class="bg-white rounded-lg shadow p-12 text-center">
+        <p class="text-gray-500 text-lg">No teams yet.</p>
+      </div>
+    <% } else { %>
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">Rank</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <%= for (score) in scores { %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900"><%= if (score.Rank == 1) { %>⭐<% } else { %><%= score.Rank %><% } %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= score.Name %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-mono text-gray-700"><%= score.TotalPoints %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</div>

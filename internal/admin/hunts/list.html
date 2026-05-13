@@ -1,0 +1,50 @@
+<div class="max-w-4xl mx-auto w-full">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Hunts</h1>
+    <a href="/admin/hunts/new" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-500">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+      </svg>
+      New Hunt
+    </a>
+  </div>
+
+  <%= if (len(hunts) == 0) { %>
+    <div class="bg-white rounded-lg shadow p-12 text-center">
+      <p class="text-gray-500 text-lg">No hunts yet.</p>
+      <a href="/admin/hunts/new" class="mt-4 inline-block text-indigo-600 font-medium hover:text-indigo-500">Create your first hunt →</a>
+    </div>
+  <% } else { %>
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <table class="w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <%= for (hunt) in hunts { %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <a href="/admin/hunts/<%= hunt.ID %>" class="text-indigo-600 hover:text-indigo-900"><%= hunt.Title %></a>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate"><%= hunt.Description %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono"><%= hunt.Points %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= hunt.CreatedAt.Format("Jan 02, 2006") %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <a href="/admin/hunts/<%= hunt.ID %>/edit" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</a>
+                <form action="/admin/hunts/<%= hunt.ID %>/delete" method="POST" class="inline" onsubmit="return confirm('Delete this hunt?');">
+                  <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>

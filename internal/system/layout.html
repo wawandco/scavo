@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" class="h-full">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>LeapKit</title>
+
+        <link rel="stylesheet" href="<%= assetPath(`application.css`) %>"/>
+        <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet" />
+    </head>
+    <body class="h-full flex flex-row min-h-full relative">
+        <section class="flex flex-col min-h-full w-full">
+            <%= if (isAdmin) { %>
+                <nav class="bg-white border-b border-gray-200 py-3">
+                    <div class="max-w-4xl mx-auto flex items-center gap-6">
+                        <a href="/" class="text-lg font-bold text-amber-600 hover:text-amber-700">Scavo</a>
+                        <div class="flex items-center gap-4 text-sm flex-1">
+                            <a href="/admin" class="text-gray-600 hover:text-gray-900">Dashboard</a>
+                            <a href="/scoreboard" class="text-gray-600 hover:text-gray-900">Scoreboard</a>
+                            <a href="/admin/teams" class="text-gray-600 hover:text-gray-900">Teams</a>
+                            <a href="/admin/members" class="text-gray-600 hover:text-gray-900">Members</a>
+                            <a href="/admin/hunts" class="text-gray-600 hover:text-gray-900">Hunts</a>
+                        </div>
+                        <form action="/auth/users/logout" method="POST" class="inline">
+                            <button type="submit" class="text-sm text-gray-600 hover:text-gray-900">Logout</button>
+                        </form>
+                    </div>
+                </nav>
+            <% } else if (isLoggedIn) { %>
+                <nav class="bg-white border-b border-gray-200 py-3">
+                    <div class="max-w-4xl mx-auto flex items-center gap-6">
+                        <a href="/" class="text-lg font-bold text-amber-600 hover:text-amber-700">Scavo</a>
+                        <div class="flex items-center gap-4 text-sm flex-1">
+                            <a href="/scoreboard" class="text-gray-600 hover:text-gray-900">Scoreboard</a>
+                            <%= if (isAdminUser) { %>
+                                <a href="/admin" class="text-gray-600 hover:text-gray-900">Admin</a>
+                            <% } %>
+                        </div>
+                        <form action="/auth/users/logout" method="POST" class="inline">
+                            <button type="submit" class="text-sm text-gray-600 hover:text-gray-900">Logout</button>
+                        </form>
+                    </div>
+                </nav>
+            <% } %>
+            <main class="min-h-full p-8 py-10 flex flex-col gap-5 bg-gray-100">
+                <%= yield %>
+            </main>
+        </section>
+    </body>
+</html>
