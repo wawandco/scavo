@@ -1,0 +1,39 @@
+service: scavo
+image: paganotoni/scavo
+servers:
+  web:
+    hosts:
+      - <%= ENV["SERVER_IP"] %>
+    options:
+      cpus: 0.5
+
+volumes:
+  - /data/scavo:/data/scavo
+  - /data/scavo/uploads:/bin/uploads
+
+registry:
+  server: "localhost:5555"
+
+env:
+  clear:
+    GO_ENV: production
+    DATABASE_URL: /data/scavo/database.db
+    BASE_URL: "https://scavo.wawand.co"
+  secret:
+    - SESSION_SECRET
+    - SESSION_NAME
+
+proxy:
+  host: scavo.wawand.co
+  ssl: true
+  app_port: 3000
+  forward_headers: true
+  healthcheck:
+    interval: 2
+    timeout: 2
+    path: /health
+
+builder:
+  arch: amd64
+  cache:
+    type: gha

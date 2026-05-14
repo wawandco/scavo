@@ -1,0 +1,22 @@
+<div class="max-w-md mx-auto mt-20">
+  <div class="bg-white rounded-lg shadow p-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-2 text-center">Scavo</h1>
+    <p class="text-sm text-gray-600 text-center mb-6">Enter your personal ID to continue</p>
+
+    <form action="/auth/users/login" method="POST" class="space-y-4">
+      <input type="hidden" name="redirect" value="<%= redirect %>">
+
+      <div>
+        <label for="personal_id" class="block text-sm font-medium text-gray-900">Personal ID</label>
+        <input type="text" name="personal_id" id="personal_id" required
+               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm px-3 py-2 border"
+               placeholder="e.g. abc123">
+      </div>
+
+      <button type="submit"
+              class="w-full inline-flex justify-center items-center px-4 py-2 bg-amber-600 text-white text-sm font-medium rounded-md hover:bg-amber-500">
+        Sign In
+      </button>
+    </form>
+  </div>
+</div>

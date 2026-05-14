@@ -1,0 +1,27 @@
+module scavo
+
+go 1.25.0
+
+require (
+	github.com/mattn/go-sqlite3 v1.14.44
+	go.leapkit.dev/core v0.1.16
+)
+
+require (
+	github.com/fsnotify/fsnotify v1.10.1 // indirect
+	github.com/gobuffalo/flect v1.0.3 // indirect
+	github.com/gobuffalo/plush/v5 v5.0.11 // indirect
+	github.com/gorilla/securecookie v1.1.2 // indirect
+	github.com/gorilla/sessions v1.3.0 // indirect
+	github.com/lib/pq v1.12.3 // indirect
+	github.com/spf13/pflag v1.0.10 // indirect
+	go.antoniopagano.com/tailo v0.0.11 // indirect
+	go.leapkit.dev/tools v0.1.11 // indirect
+	golang.org/x/sys v0.44.0 // indirect
+)
+
+tool (
+	go.antoniopagano.com/tailo
+	go.leapkit.dev/tools/db
+	go.leapkit.dev/tools/dev
+)
