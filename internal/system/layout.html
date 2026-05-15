@@ -12,41 +12,109 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap" rel="stylesheet" />
     </head>
-    <body class="h-full flex flex-row min-h-full relative overflow-y-auto">
-        <section class="flex flex-col min-h-full w-full">
+    <body class="min-h-full flex flex-col overflow-x-hidden relative pb-16 md:pb-0">
+        <section class="flex flex-col min-h-full w-full min-w-0">
             <%= if (isAdmin) { %>
+                <!-- Top Navigation -->
                 <nav class="bg-white border-b border-gray-200 py-3">
-                    <div class="max-w-4xl mx-auto flex items-center gap-6">
-                        <a href="/" class="text-lg font-bold text-amber-600 hover:text-amber-700">Scavo</a>
-                        <div class="flex items-center gap-4 text-sm flex-1">
+                    <div class="max-w-4xl mx-auto flex items-center justify-between px-3 md:px-4">
+                        <!-- Mobile: centered logo, Desktop: left logo -->
+                        <a href="/" class="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 text-sm md:text-lg font-bold text-amber-600 hover:text-amber-700">Scavo</a>
+                        <!-- Desktop links -->
+                        <div class="hidden md:flex items-center gap-4 text-sm flex-1 md:ml-6">
                             <a href="/admin" class="text-gray-600 hover:text-gray-900">Dashboard</a>
                             <a href="/scoreboard" class="text-gray-600 hover:text-gray-900">Scoreboard</a>
                             <a href="/admin/teams" class="text-gray-600 hover:text-gray-900">Teams</a>
                             <a href="/admin/members" class="text-gray-600 hover:text-gray-900">Members</a>
                             <a href="/admin/hunts" class="text-gray-600 hover:text-gray-900">Hunts</a>
                         </div>
-                        <form action="/auth/users/logout" method="POST" class="inline">
-                            <button type="submit" class="text-sm text-gray-600 hover:text-gray-900">Logout</button>
+                        <!-- Logout button -->
+                        <form action="/auth/users/logout" method="POST" class="inline md:ml-auto">
+                            <button type="submit" class="text-xs md:text-sm text-gray-600 hover:text-gray-900">Logout</button>
                         </form>
                     </div>
                 </nav>
+                <!-- Mobile Bottom Navigation -->
+                <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+                    <div class="flex justify-around items-center py-2">
+                        <a href="/admin" class="flex flex-col items-center gap-0.5 text-gray-600 hover:text-gray-900">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                            </svg>
+                            <span class="text-[10px]">Dash</span>
+                        </a>
+                        <a href="/scoreboard" class="flex flex-col items-center gap-0.5 text-gray-600 hover:text-gray-900">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                            <span class="text-[10px]">Score</span>
+                        </a>
+                        <a href="/admin/teams" class="flex flex-col items-center gap-0.5 text-gray-600 hover:text-gray-900">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            <span class="text-[10px]">Teams</span>
+                        </a>
+                        <a href="/admin/members" class="flex flex-col items-center gap-0.5 text-gray-600 hover:text-gray-900">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                            <span class="text-[10px]">Members</span>
+                        </a>
+                        <a href="/admin/hunts" class="flex flex-col items-center gap-0.5 text-gray-600 hover:text-gray-900">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            <span class="text-[10px]">Hunts</span>
+                        </a>
+                    </div>
+                </nav>
             <% } else if (isLoggedIn) { %>
+                <!-- Top Navigation -->
                 <nav class="bg-white border-b border-gray-200 py-3">
-                    <div class="max-w-4xl mx-auto flex items-center gap-6">
-                        <a href="/" class="text-lg font-bold text-amber-600 hover:text-amber-700">Scavo</a>
-                        <div class="flex items-center gap-4 text-sm flex-1">
+                    <div class="max-w-4xl mx-auto flex items-center justify-between px-3 md:px-4">
+                        <!-- Mobile: centered logo, Desktop: left logo -->
+                        <a href="/" class="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 text-sm md:text-lg font-bold text-amber-600 hover:text-amber-700">Scavo</a>
+                        <!-- Desktop links -->
+                        <div class="hidden md:flex items-center gap-4 text-sm flex-1 md:ml-6">
                             <a href="/scoreboard" class="text-gray-600 hover:text-gray-900">Scoreboard</a>
                             <%= if (isAdminUser) { %>
                                 <a href="/admin" class="text-gray-600 hover:text-gray-900">Admin</a>
                             <% } %>
                         </div>
-                        <form action="/auth/users/logout" method="POST" class="inline">
-                            <button type="submit" class="text-sm text-gray-600 hover:text-gray-900">Logout</button>
+                        <!-- Logout button -->
+                        <form action="/auth/users/logout" method="POST" class="inline md:ml-auto">
+                            <button type="submit" class="text-xs md:text-sm text-gray-600 hover:text-gray-900">Logout</button>
                         </form>
                     </div>
                 </nav>
+                <!-- Mobile Bottom Navigation -->
+                <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+                    <div class="flex justify-around items-center py-2">
+                        <a href="/" class="flex flex-col items-center gap-0.5 text-amber-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                            </svg>
+                            <span class="text-[10px]">Home</span>
+                        </a>
+                        <a href="/scoreboard" class="flex flex-col items-center gap-0.5 text-gray-600 hover:text-gray-900">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                            <span class="text-[10px]">Scoreboard</span>
+                        </a>
+                        <%= if (isAdminUser) { %>
+                            <a href="/admin" class="flex flex-col items-center gap-0.5 text-gray-600 hover:text-gray-900">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                                </svg>
+                                <span class="text-[10px]">Admin</span>
+                            </a>
+                        <% } %>
+                    </div>
+                </nav>
             <% } %>
-            <main class="min-h-full p-8 py-10 flex flex-col gap-5 bg-gray-100">
+            <main class="flex-grow px-3 py-5 md:p-8 md:py-10 flex flex-col gap-5 bg-gray-100 min-w-0">
                 <%= yield %>
             </main>
         </section>
