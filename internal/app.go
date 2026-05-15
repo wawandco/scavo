@@ -24,7 +24,7 @@ import (
 )
 
 var (
-	//go:embed **/*.html **/*.html
+	//go:embed **/*.html **/*.html **/**/*.html
 	tmpls embed.FS
 
 	// DBFn is the database connection builder function
