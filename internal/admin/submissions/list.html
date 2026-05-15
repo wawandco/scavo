@@ -18,7 +18,7 @@
               <span class="text-sm font-medium text-gray-900"><%= submission.MemberName %></span>
               <span class="text-xs text-gray-500">(<%= submission.TeamName %>)</span>
               <%= if (submission.Status == "pending") { %>
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">Submitted</span>
               <% } else if (submission.Status == "approved") { %>
                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Approved</span>
               <% } else { %>
