@@ -25,11 +25,17 @@ RUN go build -tags osusergo,netgo -o bin/app ./cmd/app
 FROM alpine
 RUN apk add --no-cache tzdata ca-certificates
 
+# Create non-root user for better security posture in production images
+RUN addgroup -S app && adduser -S app -G app
+
 WORKDIR /bin/
 
 # Copying binaries to /bin from the builder stage
 COPY --from=builder /src/app/bin/app .
 COPY --from=builder /src/app/bin/migrate .
+
+# Run as non-root
+USER app
 
 # Specifying the shell to use
 SHELL ["/bin/ash", "-c"]

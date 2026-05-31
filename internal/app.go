@@ -43,22 +43,27 @@ var (
 		),
 	)
 
-	// Server configuration variables loaded from
-	host          = cmp.Or(os.Getenv("HOST"), "0.0.0.0")
-	port          = cmp.Or(os.Getenv("PORT"), "3000")
-	sessionSecret = cmp.Or(os.Getenv("SESSION_SECRET"), "d720c059-9664-4980-8169-1158e167ae57")
-	sessionName   = cmp.Or(os.Getenv("SESSION_NAME"), "leapkit_session")
+	// Server configuration variables loaded from environment at startup.
+	host        = cmp.Or(os.Getenv("HOST"), "0.0.0.0")
+	port        = cmp.Or(os.Getenv("PORT"), "3000")
+	sessionName = cmp.Or(os.Getenv("SESSION_NAME"), "scavo_session")
 )
 
 // New creates the http handler using the Leapkit server package
 // and returns it with the address it is listening on.
 func New() (http.Handler, string) {
+	secret := os.Getenv("SESSION_SECRET")
+	if secret == "" {
+		slog.Error("SESSION_SECRET environment variable is required")
+		os.Exit(1)
+	}
+
 	// Creating a new server instance with the host and port
 	// variables read from the environment or default values.
 	r := server.New(
 		server.WithHost(host),
 		server.WithPort(port),
-		server.WithSession(sessionSecret, sessionName),
+		server.WithSession(secret, sessionName),
 
 		// Mounting the assets folder in the /assets URL path
 		server.WithAssets(assets.Files, "/internal/system/assets"),
@@ -99,9 +104,9 @@ func New() (http.Handler, string) {
 		})
 	})
 
-	r.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("GET /health", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		_, _ = w.Write([]byte("OK"))
 	})
 
 	// Admin routes (auth + admin required)

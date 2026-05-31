@@ -1,3 +1,5 @@
+// Package auth implements login, logout, session management, and
+// the admin authorization gate used to protect /admin routes.
 package auth
 
 import (

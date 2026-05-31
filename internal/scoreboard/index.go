@@ -1,8 +1,11 @@
+// Package scoreboard renders the public real-time leaderboard
+// showing team progress and points during an event.
 package scoreboard
 
 import (
-	"database/sql"
 	"net/http"
+
+	"scavo/internal/db"
 
 	"go.leapkit.dev/core/render"
 	"go.leapkit.dev/core/server"
@@ -17,7 +20,7 @@ type TeamScore struct {
 
 // Index renders the public scoreboard.
 func Index(w http.ResponseWriter, r *http.Request) {
-	db, _ := r.Context().Value("db").(*sql.DB)
+	db := db.FromCtx(r.Context())
 
 	rows, err := db.Query(`
 		SELECT t.name, COALESCE(SUM(h.points), 0)

@@ -1,3 +1,5 @@
+// Package admin contains the domain models (Team, Hunt, Member, Submission)
+// and shared data access helpers used across the admin resource packages.
 package admin
 
 import (

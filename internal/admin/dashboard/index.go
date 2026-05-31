@@ -1,3 +1,4 @@
+// Package dashboard provides the main admin dashboard handler and overview metrics.
 package dashboard
 
 import (

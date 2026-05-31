@@ -1,17 +1,22 @@
 # Scavo
 
-Scavo is a scavenger hunt web application built for [Wawandco](https://wawandco.com)'s team events ("cumbres"). Teams compete by solving mixed-media clues — text answers, photo submissions, and QR code scans — within a time limit set by the event organizer. A real-time leaderboard tracks progress, and organizers manage hunts through a web admin interface.
+**Scavo** is a scavenger hunt web app built for [Wawandco](https://wawandco.com) team events (cumbres).
+
+Teams solve mixed-media clues (text, photos, QR codes) in a timed event. It features a real-time leaderboard and a full admin interface for organizers.
+
+This repo is published as a **showcase** of Wawandco’s engineering practices using Go, HTMX, Tailwind v4, and LeapKit.
+
+> **License:** [O’Saasy](LICENSE) — permissive, with a restriction against competing hosted/SaaS offerings.
 
 ## How It Works
 
-- **Login:** Users authenticate with a pre-defined personal ID assigned before the event.
-- **Gameplay:** Teams progress through a hunt by solving clues. Clue types include:
-  - Text clues with typed answers
-  - Photo/image submissions (proof-based tasks)
-  - QR code scanning at physical locations
-- **Scoring:** Points-based system. The organizer sets a time limit and can close submissions at any time.
-- **Leaderboard:** Real-time ranking updates as teams submit answers.
-- **Admin:** Organizers create hunts, add clues, define time limits, monitor team progress, and control event flow via a web admin panel.
+- Players log in with a personal ID
+- Teams solve clues (text answers, photo uploads, or QR scans)
+- Submissions are scored with points
+- A live leaderboard updates in real time
+- Organizers manage everything through a simple admin interface
+
+The organizer can set time limits and close submissions at any moment.
 
 ## Tech Stack
 
@@ -19,12 +24,12 @@ Scavo is a scavenger hunt web application built for [Wawandco](https://wawandco.
 - **Frontend:** [HTMX 2.0](https://htmx.org/) + [Tailwind CSS v4](https://tailwindcss.com/)
 - **Templating:** [Plush](https://github.com/gobuffalo/plush) (`<%= %>` syntax)
 - **Database:** SQLite (WAL mode, busy timeout configured)
-- **Deployment:** Docker (Alpine Linux multi-stage build)
+- **Deployment:** Docker (Alpine) + [Kamal](https://kamal-deploy.org)
 
 ## Prerequisites
 
 - Go 1.25+
-- A `.env` file at repo root (see existing `.env` for defaults)
+- Copy `.env.example` → `.env` and adjust values as needed
 
 ## Development
 
@@ -65,44 +70,68 @@ Key variables (loaded automatically from `.env`):
 
 ## Architecture
 
-- **Entrypoints:**
-  - `cmd/app/main.go` — HTTP server
-  - `cmd/migrate/migrate.go` — Database migration runner
-- **Handlers & Routes:** Located in `internal/` (e.g., `internal/app.go`, `internal/index.go`)
-- **Templates:** Co-located with handlers under `internal/`; the render middleware mounts `tmpls embed.FS` under the `internal` prefix
-- **Layout:** `internal/system/layout.html` is the default layout; pages yield into it with `<%= yield %>`
-- **Assets:** `internal/system/assets/` are embedded via `embed.FS` and served at `/internal/system/assets`
-- **Migrations:** `internal/migrations/*.sql` are embedded and executed with `db.RunMigrations`
+Scavo follows a simple, explicit structure (typical of small LeapKit apps):
 
-## Building & Deployment
+- **Entry points** — `cmd/app` (HTTP server) and `cmd/migrate` (runs embedded migrations on startup)
+- **Handlers** — Domain-organized under `internal/` (`home/`, `auth/`, `admin/hunts/`, `admin/teams/`, etc.)
+- **Templates** — Co-located with handlers using Plush (`<%= %>` syntax)
+- **Assets** — Embedded via `embed.FS` (CSS + JS served from `/internal/system/assets`)
+- **Database** — SQLite with all migrations in `internal/migrations/` and executed automatically
 
-### Docker
+This design prioritizes clarity and low cognitive overhead over heavy abstraction.
 
-The included `Dockerfile` builds a minimal Alpine image:
+## Deployment
 
-1. Downloads the Tailwind binary (`go tool tailo download`)
-2. Compiles CSS
-3. Builds `migrate` and `app` binaries with `-tags osusergo,netgo`
-4. Container startup runs `migrate && app`
+### Docker (Self-hosted)
 
-### Manual Build
+```bash
+# Build the image
+docker build -t scavo .
 
-```sh
-# 1. Build CSS
-go tool tailo -i internal/system/assets/tailwind.css -o internal/system/assets/application.css
-
-# 2. Run migrations
-go run ./cmd/migrate
-
-# 3. Build and run the app
-go build -o bin/app ./cmd/app
-./bin/app
+# Run (mount a volume for persistent database + uploads)
+docker run -p 3000:3000 \
+  -e SESSION_SECRET=your-very-long-random-secret \
+  -e DATABASE_URL=/data/scavo.db \
+  -v scavo-data:/data \
+  scavo
 ```
+
+The container runs migrations automatically on startup.
+
+### Kamal (Recommended for Production)
+
+This project is deployed using [Kamal 2](https://kamal-deploy.org/).
+
+Configuration lives in:
+- `config/deploy.yml`
+- `.kamal/secrets` (never commit real secrets)
+
+Typical workflow:
+
+```bash
+kamal setup
+kamal deploy
+```
+
+Make sure `SESSION_SECRET` and any other secrets are provided via Kamal secrets or your CI.
+
+**Required production configuration:**
+- Persistent volume for SQLite database and uploaded images
+- `SESSION_SECRET` (strong random value)
+- Proper `SERVER_IP` / hosts in `deploy.yml`
+
+For local development, see the [Development](#development) section above.
 
 ## Project Context
 
 This is a **use-once event app** designed for a single Wawandco cumbre. It prioritizes simplicity and reliability over long-term maintainability.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
 ## License
 
-Internal Wawandco project. Not open source.
+This project is released under the [O’Saasy License](LICENSE) — a permissive license with a restriction against offering competing hosted/SaaS versions.
+
+It is published primarily as a showcase of Wawandco’s engineering practices.

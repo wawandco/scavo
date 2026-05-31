@@ -1,3 +1,5 @@
+// Package teams provides the admin HTTP handlers for creating and
+// managing competing teams in an event.
 package teams
 
 import (

@@ -1,3 +1,5 @@
+// Package members provides the admin HTTP handlers for managing
+// event participants (team members).
 package members
 
 import (

@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"net/http"
 
+	"scavo/internal/db"
+
 	"go.leapkit.dev/core/server"
 	"go.leapkit.dev/core/server/session"
 )
@@ -21,7 +23,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, _ := r.Context().Value("db").(*sql.DB)
+	db := db.FromCtx(r.Context())
 	var memberID, isAdmin int
 	err := db.QueryRow("SELECT id, is_admin FROM members WHERE personal_id = ?", personalID).Scan(&memberID, &isAdmin)
 	if err == sql.ErrNoRows {

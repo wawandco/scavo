@@ -6,7 +6,11 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strings"
 	"time"
+
+	"scavo/internal/db"
 
 	"go.leapkit.dev/core/server"
 	"go.leapkit.dev/core/server/session"
@@ -32,7 +36,7 @@ func CreateSubmission(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, _ := r.Context().Value("db").(*sql.DB)
+	db := db.FromCtx(r.Context())
 	var teamID sql.NullInt64
 	_ = db.QueryRow("SELECT team_id FROM members WHERE id = ?", userID).Scan(&teamID)
 	if !teamID.Valid {
@@ -45,15 +49,24 @@ func CreateSubmission(w http.ResponseWriter, r *http.Request) {
 		server.Errorf(w, http.StatusBadRequest, "image is required")
 		return
 	}
-	defer file.Close()
+	defer file.Close() //nolint:errcheck // best effort close on request body part
 
-	filename := fmt.Sprintf("%d_%d_%s", time.Now().Unix(), userID, header.Filename)
+	// Security hardening: turn the untrusted client filename into something safe to store.
+	cleanBase := sanitizeUploadFilename(header.Filename)
+	filename := fmt.Sprintf("%d_%d_%s", time.Now().Unix(), userID, cleanBase)
+
+	// Ensure uploads dir exists with restricted perms
+	if err := os.MkdirAll("uploads", 0o750); err != nil {
+		server.Errorf(w, http.StatusInternalServerError, "failed to prepare upload directory")
+		return
+	}
+
 	out, err := os.Create("uploads/" + filename)
 	if err != nil {
 		server.Errorf(w, http.StatusInternalServerError, "file save error: %s", err.Error())
 		return
 	}
-	defer out.Close()
+	defer out.Close() //nolint:errcheck // best effort close on file write
 	_, _ = io.Copy(out, file)
 
 	_, _ = db.Exec(
@@ -67,4 +80,58 @@ func CreateSubmission(w http.ResponseWriter, r *http.Request) {
 	)
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+// sanitizeUploadFilename takes an untrusted filename provided by a client
+// (via multipart form upload) and returns a safe base name suitable for
+// writing to disk.
+//
+// It defends against:
+//   - directory traversal (../foo.png, /etc/passwd, etc.)
+//   - control characters and most special filesystem characters
+//   - missing, extremely long, or dangerous extensions
+//   - names that are too long for practical storage
+//
+// Only the base filename is returned — no directory components.
+func sanitizeUploadFilename(original string) string {
+	base := filepath.Base(original)
+	if base == "" || base == "." || base == ".." {
+		return "upload.bin"
+	}
+
+	// Keep only characters that are generally safe across filesystems and URLs.
+	clean := strings.Map(func(r rune) rune {
+		switch {
+		case r >= 'a' && r <= 'z',
+			r >= 'A' && r <= 'Z',
+			r >= '0' && r <= '9',
+			r == '-', r == '_', r == '.':
+			return r
+		default:
+			return '-'
+		}
+	}, base)
+
+	if clean == "" || clean == "." {
+		return "upload.bin"
+	}
+
+	// Remove whatever extension the (already sanitized) name had.
+	originalExt := filepath.Ext(clean)
+	clean = strings.TrimSuffix(clean, originalExt)
+
+	// Decide on the final safe extension.
+	ext := strings.ToLower(originalExt)
+	if ext == "" || len(ext) > 8 {
+		ext = ".bin"
+	}
+
+	// Truncate stem if needed, then append the chosen extension.
+	const maxStem = 76
+	if len(clean) > maxStem {
+		clean = clean[:maxStem]
+	}
+	clean = clean + ext
+
+	return clean
 }

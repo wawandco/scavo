@@ -1,3 +1,4 @@
+// Package main is the entry point for the standalone database migration tool.
 package main
 
 import (

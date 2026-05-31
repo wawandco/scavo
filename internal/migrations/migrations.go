@@ -1,3 +1,4 @@
+// Package migrations contains the embedded SQL migration files and runner for Scavo.
 package migrations
 
 import "embed"

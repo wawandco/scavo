@@ -1,9 +1,12 @@
+// Package home contains the public participant-facing handlers:
+// the main game view and submission creation.
 package home
 
 import (
 	"database/sql"
 	"net/http"
 
+	"scavo/internal/db"
 	"scavo/internal/admin"
 
 	"go.leapkit.dev/core/render"
@@ -32,7 +35,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, _ := r.Context().Value("db").(*sql.DB)
+	db := db.FromCtx(r.Context())
 
 	var teamID sql.NullInt64
 	var member admin.Member

@@ -1,3 +1,5 @@
+// Package submissions provides the admin HTTP handlers for reviewing,
+// approving, and rejecting participant photo and text submissions.
 package submissions
 
 import (

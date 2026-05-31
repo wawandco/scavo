@@ -1,3 +1,4 @@
+// Package main is the entry point for the Scavo web application server.
 package main
 
 import (

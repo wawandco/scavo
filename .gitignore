@@ -36,3 +36,6 @@ uploads/
 
 # Tailwind binary (downloaded by go tool)
 tailwindcss
+
+# Internal AI/agent instructions (not for public repo)
+AGENTS.md

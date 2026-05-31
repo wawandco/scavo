@@ -1,3 +1,5 @@
+// Package hunts provides the admin HTTP handlers for creating, editing,
+// listing, and deleting scavenger hunt clues.
 package hunts
 
 import (
