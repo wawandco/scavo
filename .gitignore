@@ -1,6 +1,38 @@
-bin/*
+# Binaries and build outputs
+app
+migrate
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Environment & secrets (never commit these)
+.env
+.env.*
+!.env.example
+.kamal/
+*.pem
+secrets
+
+# Local databases
 database.db*
 
 # Ignore the built version of the application.css file
 internal/system/assets/application.css
+
+# Uploads and user content
 uploads/
+
+# OS / Editor
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.log
+
+# Tailwind binary (downloaded by go tool)
+tailwindcss
