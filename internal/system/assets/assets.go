@@ -6,4 +6,6 @@ import (
 )
 
 //go:embed *
+
+// Files contains the embedded static frontend assets (CSS, JS, images, etc.).
 var Files embed.FS

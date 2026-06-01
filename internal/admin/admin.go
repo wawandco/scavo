@@ -13,7 +13,7 @@ func FetchTeams(db *sql.DB) ([]Team, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer rows.Close() //nolint:errcheck // best effort cleanup
 
 	var teams []Team
 	for rows.Next() {

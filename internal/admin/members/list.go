@@ -24,7 +24,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 		server.Errorf(w, http.StatusInternalServerError, "query error: %s", err.Error())
 		return
 	}
-	defer rows.Close()
+	defer rows.Close() //nolint:errcheck // best effort cleanup
 
 	var members []admin.Member
 	for rows.Next() {

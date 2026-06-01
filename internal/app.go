@@ -85,7 +85,7 @@ func New() (http.Handler, string) {
 
 	// Inject the database connection into the request context.
 	r.Use(server.InCtxMiddleware("db", conn))
-	r.Use(auth.AuthContext)
+	r.Use(auth.Context)
 
 	r.HandleFunc("GET /auth/users/login", auth.ShowLogin)
 	r.HandleFunc("POST /auth/users/login", auth.Login)
