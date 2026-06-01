@@ -4,7 +4,7 @@
 
 Teams solve mixed-media clues (text, photos, QR codes) in a timed event. It features a real-time leaderboard and a full admin interface for organizers.
 
-This repo is published as a **showcase** of Wawandco’s engineering practices using Go, HTMX, Tailwind v4, and LeapKit.
+This repo is published as a **showcase** of Wawandco’s engineering practices using Go, HTMX, Tailwind v4, and LeapKit. Read about the story behind it: [We Built Scavo — Wawandco Blog](https://wawand.co/blog/posts/we-built-scavo/)
 
 > **License:** [O’Saasy](LICENSE) — permissive, with a restriction against competing hosted/SaaS offerings.
 
@@ -38,6 +38,9 @@ The organizer can set time limits and close submissions at any moment.
 ```sh
 # Download dependencies
 go mod download
+
+# Run database migrations
+go tool db migrate
 
 # Start dev server (auto-restarts on Go changes + watches CSS)
 go tool dev
